@@ -1,35 +1,55 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import CryptoList from './CryptoList';
+import CryptoDetails from './CryptoDetails';
 
-function App() {
-  const [count, setCount] = useState(0)
-
-  return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+interface Crypto {
+  id: string;
+  name: string;
+  priceUsd: number;
+  rank: number;
 }
 
-export default App
+function App() {
+  const [cryptoData, setCryptoData] = useState<Crypto[]>([]);
+  const [selectedCrypto, setSelectedCrypto] = useState<Crypto | null>(null);
+
+  useEffect(() => {
+    axios.get<Crypto[]>('https://api.coincap.io/v2/assets')
+      .then(response => {
+        setCryptoData(response.data.data);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }, []);
+
+  const handleSelectCrypto = (crypto: Crypto) => {
+    setSelectedCrypto(crypto);
+  };
+
+  const handleMoveToTop = (id: string) => {
+    const selectedCrypto = cryptoData.find(crypto => crypto.id === id);
+    const filteredCryptoData = cryptoData.filter(crypto => crypto.id !== id);
+    setCryptoData([selectedCrypto!, ...filteredCryptoData]);
+    setSelectedCrypto(selectedCrypto!);
+  };
+
+  const handleClearSelectedCrypto = () => {
+    setSelectedCrypto(null);
+  };
+
+  return (
+    <div className='container'>
+      <h1>Cryptocurrencies</h1>
+      <div className='crypto-details'>
+        <CryptoDetails selectedCrypto={selectedCrypto} onClearSelectedCrypto={handleClearSelectedCrypto} />
+      </div>
+      <div className="crypto-list">
+        <CryptoList cryptoData={cryptoData} onSelectCrypto={handleSelectCrypto} />
+      </div>
+    </div>
+  );
+}
+
+export default App;
