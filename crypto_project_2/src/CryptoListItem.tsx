@@ -1,10 +1,6 @@
 import React from 'react';
-import { Crypto } from './types';
+import { Crypto, CryptoListProps } from './interfaces';
 
-interface CryptoListItemProps {
-  crypto: Crypto;
-  onSelectCrypto: (crypto: Crypto) => void;
-}
 
 function CryptoListItem({ crypto, onSelectCrypto }: CryptoListItemProps) {
   const handleMoveToTop = () => {
@@ -14,8 +10,10 @@ function CryptoListItem({ crypto, onSelectCrypto }: CryptoListItemProps) {
   return (
     <div className="crypto-list-container">
       <h2 className="crypto-name">{crypto.name}</h2>
-      <p className="crypto-price">Price: {crypto.priceUsd}</p>
-      <button className="crypto-button" onClick={handleMoveToTop}>Check</button>
+      <p className="crypto-price">Current Price: {crypto.priceUsd}</p>
+      <button className="crypto-button" onClick={handleMoveToTop}>
+        Check
+      </button>
     </div>
   );
 }
