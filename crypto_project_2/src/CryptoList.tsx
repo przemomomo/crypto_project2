@@ -1,17 +1,15 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import CryptoListItem from './CryptoListItem';
-import { Crypto, CryptoListProps } from './interfaces';
+import { AppContext } from './AppContext';
+import { Crypto } from './interfaces';
 
+function CryptoList() {
+  const { cryptoData } = useContext(AppContext);
 
-function CryptoList({ cryptoData, onSelectCrypto }: CryptoListProps) {
   return (
     <div>
       {cryptoData.map((crypto) => (
-        <CryptoListItem
-          key={crypto.id}
-          crypto={crypto}
-          onSelectCrypto={onSelectCrypto}
-        />
+        <CryptoListItem key={crypto.id} crypto={crypto} />
       ))}
     </div>
   );

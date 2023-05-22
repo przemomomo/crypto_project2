@@ -1,8 +1,14 @@
-import React from 'react';
-import { Crypto, CryptoListProps } from './interfaces';
+import React, { useContext } from 'react';
+import { AppContext } from './AppContext';
+import { Crypto } from './interfaces';
 
+interface CryptoListItemProps {
+  crypto: Crypto;
+}
 
-function CryptoListItem({ crypto, onSelectCrypto }: CryptoListItemProps) {
+function CryptoListItem({ crypto }: CryptoListItemProps) {
+  const { onSelectCrypto } = useContext(AppContext);
+
   const handleMoveToTop = () => {
     onSelectCrypto(crypto);
   };
